@@ -66,7 +66,7 @@ def generate_log():
     return log_entries
 
 # change the first parameter of open() to change the name of the log file.
-with open("generated_web_logs.log", "w") as file:
+with open("generated_auth_logs.log", "w") as file:
     log_entries = generate_log()
     file.writelines(log_entries)
 
