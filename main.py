@@ -1,5 +1,6 @@
 import random
 import datetime
+import time
 
 # Define possible values for certain fields
 actions = ["success", "failure", "pending", "error"]
@@ -8,12 +9,10 @@ authentication_methods = ["password", "2fa", "certificate"]
 destinations = ["server1", "server2", "server3"]
 dest_bunits = ["IT", "HR", "Finance"]
 dest_categories = ["server", "workstation", "network"]
-# Add more possible values for other fields as needed
 
-# Generate random authentication logs
-num_logs = 200000  # You can change this to the number of logs you want to generate
+num_logs = 200000  # Number of logs to generate
 
-def generate_log():
+def generate_log(timestamp):
     random_generator = random.SystemRandom()
     log_entries = []
 
@@ -53,7 +52,6 @@ def generate_log():
         user_role = random_generator.choice(["admin", "user"])
         user_type = random_generator.choice(["employee", "contractor"])
         vendor_account = f"vendor_account_{random_generator.randint(1, 10)}"
-        timestamp = datetime.datetime.now().isoformat()
 
         log_entry = (
             f"{action} | {app} | {authentication_method} | {dest} | {dest_bunit} | {dest_category} | {dest_nt_domain} | {dest_priority} "
@@ -65,8 +63,15 @@ def generate_log():
 
     return log_entries
 
-# change the first parameter of open() to change the name of the log file.
-with open("generated_auth_logs.log", "w") as file:
-    log_entries = generate_log()
-    file.writelines(log_entries)
+def write_logs():
+    timestamp = datetime.datetime.now().isoformat()  # Use single timestamp
+    log_entries = generate_log(timestamp)
+    
+    with open("generated_auth_logs-" + timestamp + ".log", "a") as file:  # Append mode
+        file.writelines(log_entries)
 
+if __name__ == "__main__":
+    while True:
+        write_logs()
+        print("Successfully generated logs.")
+        time.sleep(60)
